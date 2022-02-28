@@ -1,5 +1,5 @@
 const jwt=require('jsonwebtoken');
-const User=require('../models/users');
+const users=require('../modules/users');
 
 function generateToken(req,res,next){
     const token=jwt.sign({userId:req.userId},process.env.SECRET_KEY,{expiresIn:'30d'});
@@ -18,11 +18,26 @@ function verifyToken(req,res,next){
                 res.status(401).json({err:"Invalid token"});
             }
             else{
-                req.userId=decoded.userId;
+                req.body.userId=decoded.userId;
                 next();
             }
         });
     }
 }
-
-module.exports={generateToken,verifyToken};
+function verifyAdmin(req,res,next){
+    users.findById(req.body.userId,(err,data)=>{
+        if(err) res.status(500).json({err:err});
+        else if(!data){
+            res.status(301).json({err:"Invalid token"});
+        }
+        else{
+            if(data.admin){
+                next();
+            }
+            else{
+                res.status(301).json({err:"You are not an admin"});
+            }
+        }
+    })
+}
+module.exports={generateToken,verifyToken,verifyAdmin};

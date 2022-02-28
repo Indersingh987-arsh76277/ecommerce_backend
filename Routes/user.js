@@ -1,6 +1,10 @@
 const router=require('express').Router();
-const users=require('../models/users');
+
+const users=require('../modules/users');
+
 const {generateToken,verifyToken}=require('../middlewares/tokens');
+
+
 router.post('/login',(req,res,next)=>{
     const email=req.body.email;
     const password=req.body.password;
@@ -12,8 +16,10 @@ router.post('/login',(req,res,next)=>{
             else if(!data){
                 res.status(301).json({err:"Invalid email or password"});
             }
-            req.userId=data._id;
-            next();
+            else{
+                req.userId=data._id;
+                next();
+            }
         });
     }
 },generateToken);
@@ -37,31 +43,14 @@ router.post('/signup',(req,res,next)=>{
                 });
                 user.save((err,data)=>{
                     if(err) res.status(500).json({err:err});
-                    else req.userId=data._id;
-                    next();
+                    else{
+                        req.userId=data._id;
+                        next();
+                    }
                 })
                }
             })
         }
 },generateToken);
-
-router.get('/verifyAdmin',verifyToken,(req,res)=>{
-    console.log(req.userId);
-    users.findById(req.userId,(err,data)=>{
-        if(err) res.status(500).json({err:err});
-        else if(!data){
-            res.status(301).json({err:"Invalid token"});
-        }
-        else{
-            if(data.admin){
-                res.status(200).json({admin:true});
-            }
-            else{
-                res.status(301).json({admin:false});
-            }
-        }
-    })
-})
-
 
 module.exports=router;
