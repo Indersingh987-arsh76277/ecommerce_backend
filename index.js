@@ -5,8 +5,8 @@ const user=require('./Routes/user');
 const db=require('./Routes/db');
 const dotenv=require('dotenv');
 const mongoose=require('mongoose');
-
-
+const cors=require('cors');
+app.use(cors());
 app.set(dotenv.config());
 app.use(express.json());
 

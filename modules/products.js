@@ -15,10 +15,9 @@ const product=new mongoose.Schema({
     },
     images:{
         type:Array,
-        required:true
     },
     category:{
-        type:String,
+        type:Array,
         required:true
     },
     comments:{
@@ -33,8 +32,9 @@ const product=new mongoose.Schema({
         default:0
     },
     stock:{
-        type:Boolean
+        type:Boolean,
+        default:true
     }
 });
 
-module.exposts=mongoose.model('Product',product);
+module.exports=mongoose.model('Product',product);
