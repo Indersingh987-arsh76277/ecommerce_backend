@@ -5,10 +5,12 @@ const user=require('./Routes/user');
 const db=require('./Routes/db');
 const dotenv=require('dotenv');
 const mongoose=require('mongoose');
+const cors = require('cors');
 
 
 app.set(dotenv.config());
 app.use(express.json());
+app.use(cors());
 
 mongoose.connect(process.env.MONGO_URI,
     {

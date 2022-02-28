@@ -4,6 +4,7 @@ const {generateToken,verifyToken}=require('../middlewares/tokens');
 router.post('/login',(req,res,next)=>{
     const email=req.body.email;
     const password=req.body.password;
+    
     if(!email || !password){
         res.status(301).json({err:"Please enter email and password"});
     }else{
